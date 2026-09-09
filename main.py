@@ -1,6 +1,6 @@
 import sys
 import pygame
-from ui.hud import calculate_layout, draw_3_window_layout
+from ui.hud import calculate_layout, draw_3_window_layout, screen_to_grid
 from ui.menu import draw_menu, get_button_rects
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, STATE_MENU, STATE_PLAYING, DIFFICULTIES
 
@@ -19,6 +19,7 @@ def main():
     running = True
     current_state = STATE_MENU
     selected_difficulty = None  
+    hovered_cell = None
     while running:
         # 1. Process Events
         for event in pygame.event.get():
@@ -45,12 +46,17 @@ def main():
 
 
         # 2. Update Game State
+        if current_state == STATE_PLAYING:
+            mouse_pos = pygame.mouse.get_pos()
+            hovered_cell = screen_to_grid(mouse_pos, main_rect, 10, 10)
+        else:
+            hovered_cell = None
 
         # 3. Render / Draw
         if current_state == STATE_MENU:
             draw_menu(screen, win_w, win_h)
         elif current_state == STATE_PLAYING:
-            draw_3_window_layout(screen, left_rect, main_rect, right_rect, 10, 10)
+            draw_3_window_layout(screen, left_rect, main_rect, right_rect, 10, 10, hovered_cell)
 
 
         pygame.display.flip()
