@@ -17,10 +17,9 @@ class Building:
         self.radius = data.get("radius", 0)
         self.capacity = data.get("capacity", 0)
 
-        # 1. Fetch sprite image from pre-loaded TILE_IMAGES dictionary
+        # Fetch sprite image from TILE_IMAGES dictionary
         self.sprite = TILE_IMAGES.get(building_key)
 
-        # Pygame spatial rectangle
         self.rect = pygame.Rect(
             col * tile_size, 
             row * tile_size, 
@@ -28,10 +27,12 @@ class Building:
             tile_size
         )
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.Surface):
         """Draws building sprite image, with fallback to colored box."""
-        if self.sprite:
-            surface.blit(self.sprite, self.rect)
+        sprite = TILE_IMAGES.get(self.key)
+        if sprite:
+            scaled_sprite = pygame.transform.scale(sprite, (self.rect.width, self.rect.height)) # How does it work
+            surface.blit(scaled_sprite, self.rect)
         else:
             padding_rect = self.rect.inflate(-8, -8)
             pygame.draw.rect(surface, self.color, padding_rect)
